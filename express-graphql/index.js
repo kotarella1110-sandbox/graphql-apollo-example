@@ -1,8 +1,12 @@
+require('dotenv/config'); // .env の環境変数の読み込み
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const { ApolloEngine } = require('apollo-engine');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
+
+const { APOLLO_ENGINE_API_KEY } = process.env;
 
 // モックデータ
 const books = [
@@ -72,9 +76,27 @@ app.use(
   })
 );
 
-// サーバの起動
-app.listen(4000, () => {
-  console.log('Go to http://localhost:4000/graphiql to run queries!');
+// Apollo Engineのインスタンスの作成
+const engine = new ApolloEngine({
+  apiKey: APOLLO_ENGINE_API_KEY,
+  // メモリキャッシュの設定
+  stores: [
+    {
+      name: 'inMemEmbeddedCache',
+      inMemory: {
+        cacheSize: 104857600, // 100 MB、デフォルトは 50 MB
+      },
+    },
+  ],
+  logging: {
+    level: 'INFO', // ログの設定変更。DEBUG にするとより細かい情報を確認できます
+  },
 });
 
-module.exports = app;
+// サーバの起動
+engine.listen({
+  port: 4000,
+  expressApp: app,
+});
+
+module.exports = engine;
