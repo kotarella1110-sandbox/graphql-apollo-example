@@ -1,0 +1,54 @@
+{
+  "name": "graphql-apollo-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:kotarella1110/graphql-apollo-example.git",
+  "author": "Kotaro Sugawara <kotarella1110@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "precommit": "lint-staged",
+    "lint": "yarn lint:client && yarn lint:server",
+    "lint:client": "eslint --ext .jsx,.js 'react-graphql/src/'",
+    "lint:server": "eslint --ignore-pattern 'express-graphql/node_modules/' 'express-graphql/**/*.js' "
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.9.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.0",
+    "prettier": "^1.13.5"
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb",
+      "prettier"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "singleQuote": true,
+          "trailingComma": "es5"
+        }
+      ]
+    }
+  },
+  "lint-staged": {
+    "react-graphql/src/**/*.js": [
+      "yarn lint:client -- --fix",
+      "git add"
+    ],
+    "express-graphql/**/*.{js,jsx}": [
+      "yarn lint:server -- --fix",
+      "git add"
+    ]
+  }
+}
